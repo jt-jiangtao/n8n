@@ -200,6 +200,34 @@ export interface CommitRegistration {
   taskId?: string
 }
 
+// --- flow-view-data.schema.json ---
+/**
+ * GET /work-items/{id}/flow 返回的流程视图数据
+ */
+export interface FlowViewData {
+  nodes: {
+    id: string
+    name: string
+    type: string
+    /**
+     * @minItems 2
+     * @maxItems 2
+     */
+    position?: [number, number]
+  }[]
+  connections: {}
+  steps: {
+    nodeId: string
+    status: 'pending' | 'waiting' | 'running' | 'done' | 'failed' | 'skipped'
+    attempt: number
+    childIssueId?: string | null
+    assigneeRole?: string
+    executionUrl?: string
+  }[]
+  definitionHash?: string
+  flowType?: string
+}
+
 // --- plane-events-response.schema.json ---
 /**
  * GET /api/flow-desk/internal/events 响应
