@@ -1,0 +1,26 @@
+{
+  "name": "@n8n/nodes-flow-desk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Flow Desk n8n nodes (shell)",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "build": "node -e \"require('fs').mkdirSync('dist/nodes/FlowDeskPlaceholder',{recursive:true}); require('fs').copyFileSync('nodes/FlowDeskPlaceholder/FlowDeskPlaceholder.node.js','dist/nodes/FlowDeskPlaceholder/FlowDeskPlaceholder.node.js')\"",
+    "typecheck": "node -e \"process.exit(0)\"",
+    "test": "node -e \"process.exit(0)\""
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [],
+    "nodes": [
+      "dist/nodes/FlowDeskPlaceholder/FlowDeskPlaceholder.node.js"
+    ]
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
