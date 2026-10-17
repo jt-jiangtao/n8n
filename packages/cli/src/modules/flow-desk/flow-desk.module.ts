@@ -1,13 +1,83 @@
 import type { ModuleInterface } from '@n8n/decorators';
-import { BackendModule } from '@n8n/decorators';
+import { BackendModule, OnShutdown } from '@n8n/decorators';
+import { Container } from '@n8n/di';
 
-/**
- * Flow Desk backend module shell.
- * Later milestones add controllers, entities, and resume/HITL wiring.
- */
+import {
+	FlowDeskIngestFacade,
+	FlowDeskIngestService,
+	type PlaneEvent,
+} from './ingest/ingest.service';
+
 @BackendModule({ name: 'flow-desk', instanceTypes: ['main'] })
 export class FlowDeskModule implements ModuleInterface {
+	private pollTimer: ReturnType<typeof setInterval> | undefined;
+
 	async init() {
-		// Intentionally empty in the foundation milestone.
+		await import('./flow-desk.controller.js');
+
+		const events = new Map<string, { dedupeKey: string }>();
+		let cursor = 0;
+		const facade = Container.get(FlowDeskIngestFacade);
+
+		const planeBase = process.env.FLOW_DESK_PLANE_URL ?? 'http://api:8000';
+		const serviceToken = process.env.FLOW_DESK_SERVICE_TOKEN ?? 'svc-secret';
+
+		const impl = new FlowDeskIngestService(
+			{
+				findOneBy: async ({ dedupeKey }) => events.get(dedupeKey) ?? null,
+				save: async (row) => {
+					events.set(row.dedupeKey, row);
+					return row;
+				},
+			},
+			{
+				get: async () => cursor,
+				set: async (value) => {
+					cursor = value;
+				},
+			},
+			{
+				pullEvents: async (after) => {
+					const res = await fetch(
+						`${planeBase}/api/flow-desk/internal/events/?after=${after}`,
+						{ headers: { authorization: `Bearer ${serviceToken}` } },
+					);
+					if (!res.ok) return [];
+					const body = (await res.json()) as { events: PlaneEvent[] };
+					return body.events ?? [];
+				},
+			},
+			{
+				dispatch: async (_event: PlaneEvent) => {
+					// Runs / projection dispatch expands in add-flow-engine.
+				},
+			},
+			{ serviceToken },
+		);
+		facade.setImplementation(impl);
+
+		this.pollTimer = setInterval(() => {
+			void impl.pullAndProcess().catch(() => undefined);
+		}, 10_000);
+	}
+
+	async entities() {
+		const { FlowDeskEventEntity } = await import('./database/flow-desk-event.entity.js');
+		const { FlowDeskCursorEntity } = await import('./database/flow-desk-cursor.entity.js');
+		const { FlowDeskRunEntity } = await import('./database/flow-desk-run.entity.js');
+		const { FlowDeskStepEntity } = await import('./database/flow-desk-step.entity.js');
+		const { FlowDeskCommitEntity } = await import('./database/flow-desk-commit.entity.js');
+		return [
+			FlowDeskEventEntity,
+			FlowDeskCursorEntity,
+			FlowDeskRunEntity,
+			FlowDeskStepEntity,
+			FlowDeskCommitEntity,
+		];
+	}
+
+	@OnShutdown()
+	async shutdown() {
+		if (this.pollTimer) clearInterval(this.pollTimer);
 	}
 }

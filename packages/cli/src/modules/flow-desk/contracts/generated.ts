@@ -45,7 +45,7 @@ export interface AgentResult {
 export interface AgentTask {
   taskId: string
   kind: 'agent' | 'ci' | 'ui-check' | 'quality' | 'signal'
-  adapter?: 'codex' | 'cursor'
+  adapter?: 'codex' | 'cursor' | 'fake'
   readOnly?: boolean
   ci?: {
     repeat?: number
@@ -183,6 +183,85 @@ export interface BootstrapOutput {
   tokens: {
     flowDesk: string
     agentBot: string
+  }
+}
+
+// --- commit-registration.schema.json ---
+/**
+ * agent-runner 向模块登记的一次提交
+ */
+export interface CommitRegistration {
+  sha: string
+  workItem: string
+  flowRunId: string
+  area: string
+  branch: string
+  message?: string
+  taskId?: string
+}
+
+// --- plane-events-response.schema.json ---
+/**
+ * GET /api/flow-desk/internal/events 响应
+ */
+export interface PlaneEventsResponse {
+  events: PlaneOutboxEvent[]
+}
+/**
+ * Plane flow_desk_outbox 中的一行事件
+ */
+export interface PlaneOutboxEvent {
+  id: number
+  kind: 'state' | 'labels' | 'comment'
+  issueId: string
+  projectId: string
+  workspaceId: string
+  actorId?: string | null
+  payload: {}
+  createdAt: string
+}
+
+// --- plane-outbox-event.schema.json ---
+/**
+ * Plane flow_desk_outbox 中的一行事件
+ */
+export interface PlaneOutboxEvent {
+  id: number
+  kind: 'state' | 'labels' | 'comment'
+  issueId: string
+  projectId: string
+  workspaceId: string
+  actorId?: string | null
+  payload: {}
+  createdAt: string
+}
+
+// --- runner-task-request.schema.json ---
+/**
+ * 模块向 agent-runner POST /tasks 的请求体（AgentTask + area + flowRunId）
+ */
+export interface RunnerTaskRequest {
+  taskId: string
+  kind: 'agent' | 'ci' | 'ui-check' | 'quality' | 'signal'
+  adapter?: 'codex' | 'cursor' | 'fake'
+  readOnly?: boolean
+  workItem: string
+  step: string
+  attempt: number
+  repo: string
+  area: string
+  baseRef: string
+  instructions: string
+  acceptance: string
+  command?: string
+  flowRunId: string
+  context: {
+    previousResults: {}[]
+    rejectReasons: string[]
+  }
+  requiredFields: string[]
+  limits: {
+    timeoutSeconds: number
   }
 }
 
