@@ -387,6 +387,217 @@ export interface ProvenanceResult {
   }[]
 }
 
+// --- quality-result.schema.json ---
+/**
+ * Quality Step / agent-runner 代码质量检查结果
+ */
+export interface QualityResult {
+  status: 'pass' | 'new-errors' | 'cannot-run' | 'maxAttempts'
+  findings: Finding[]
+  notes?: string[]
+  /**
+   * @maxItems 3
+   */
+  hotspots?:
+    | []
+    | [
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        }
+      ]
+    | [
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        },
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        }
+      ]
+    | [
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        },
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        },
+        {
+          title: string
+          evidence: string
+          /**
+           * @minItems 2
+           */
+          alternatives: [
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            {
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            },
+            ...{
+              approach: string
+              benefit: string
+              cost: string
+              risk: string
+            }[]
+          ]
+          recommendation: string
+        }
+      ]
+}
+/**
+ * 界面检查与代码质量的「发现」
+ */
+export interface Finding {
+  fingerprint: string
+  rule: string
+  severity: boolean
+  level: 'error' | 'warning' | 'info'
+  source: 'deterministic' | 'agent'
+  message: string
+  location: {
+    kind: 'code' | 'ui'
+    file?: string
+    symbol?: string
+    contentHash?: string
+    page?: string
+    width?: number
+    theme?: string
+    selector?: string
+  }
+  status?: 'new' | 'existing' | 'fixed' | 'ignored'
+}
+
 // --- regression-proof-result.schema.json ---
 /**
  * proveRegression 的两次运行结果
