@@ -320,6 +320,22 @@ export interface FlowDeskProxyDecisionRequest {
   [k: string]: unknown
 }
 
+// --- flow-replay.schema.json ---
+/**
+ * 流程重放结果（meta-retro）
+ */
+export interface FlowReplayResult {
+  flowType: string
+  runs: {
+    runId: string
+    originalOutcome: string
+    newOutcome?: string
+    status: 'same' | 'worse' | 'unreplayable' | 'improved'
+    missingNodes?: string[]
+  }[]
+  worseCount?: number
+}
+
 // --- flow-run.schema.json ---
 /**
  * 一次流程运行的状态与元数据
