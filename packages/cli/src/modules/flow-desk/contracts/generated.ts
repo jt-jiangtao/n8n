@@ -232,6 +232,30 @@ export interface CommitRegistration {
   kind?: 'agent' | 'merge' | 'ci' | '回滚'
 }
 
+// --- finding.schema.json ---
+/**
+ * 界面检查与代码质量的「发现」
+ */
+export interface Finding {
+  fingerprint: string
+  rule: string
+  severity: boolean
+  level: 'error' | 'warning' | 'info'
+  source: 'deterministic' | 'agent'
+  message: string
+  location: {
+    kind: 'code' | 'ui'
+    file?: string
+    symbol?: string
+    contentHash?: string
+    page?: string
+    width?: number
+    theme?: string
+    selector?: string
+  }
+  status?: 'new' | 'existing' | 'fixed' | 'ignored'
+}
+
 // --- flow-desk-proxy.schema.json ---
 /**
  * Plane 前端经代理提交的确认请求（actor 由会话注入）
