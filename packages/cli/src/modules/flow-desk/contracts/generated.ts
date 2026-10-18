@@ -264,6 +264,19 @@ export interface PlaneOutboxEvent {
   createdAt: string
 }
 
+// --- provenance-result.schema.json ---
+/**
+ * bug 修复后在 baseRef 上查出的引入提交
+ */
+export interface ProvenanceResult {
+  introducingCommits: {
+    sha: string
+    file: string
+    line?: number
+    message?: string
+  }[]
+}
+
 // --- runner-task-request.schema.json ---
 /**
  * 模块向 agent-runner POST /tasks 的请求体（AgentTask + area + flowRunId）

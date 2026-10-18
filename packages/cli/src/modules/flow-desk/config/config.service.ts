@@ -14,7 +14,11 @@ export type AreaConfigFile = {
 		}
 	>;
 	groups: Record<string, string[]>;
-	guards: { protectedPaths: string[] };
+	guards: {
+		protectedPaths: string[];
+		baselinePaths?: string[];
+		killSwitch?: boolean;
+	};
 	provenance: { escapeWindowDays: number };
 	desktop: { stopPlaneOnQuit: boolean; launchAtLogin: boolean; hostAddress: string };
 };
@@ -24,9 +28,11 @@ export class FlowDeskConfigService {
 	private data: AreaConfigFile;
 	private lastError: { message: string; position?: string } | null = null;
 	private statesEnsured = false;
+	private killSwitch = false;
 
 	constructor(initial: AreaConfigFile) {
 		this.data = initial;
+		this.killSwitch = Boolean(initial.guards?.killSwitch);
 	}
 
 	static tryLoad(raw: string): {
@@ -34,12 +40,10 @@ export class FlowDeskConfigService {
 		error?: { position: string };
 		config?: FlowDeskConfigService;
 	} {
-		// Intentionally lightweight: full YAML parse lands with the config package wiring.
 		if (!raw.includes('areas:') || raw.includes('areas: [')) {
 			return { ok: false, error: { position: 'areas' } };
 		}
 		try {
-			// Accept JSON for unit tests / tooling.
 			if (raw.trim().startsWith('{')) {
 				const parsed = JSON.parse(raw) as AreaConfigFile;
 				return { ok: true, config: new FlowDeskConfigService(parsed) };
@@ -52,6 +56,30 @@ export class FlowDeskConfigService {
 
 	getArea(area: string) {
 		return this.data.areas[area];
+	}
+
+	getGuards() {
+		return {
+			protectedPaths: this.data.guards.protectedPaths ?? [],
+			baselinePaths: this.data.guards.baselinePaths ?? [],
+		};
+	}
+
+	getEscapeWindowDays() {
+		return this.data.provenance.escapeWindowDays;
+	}
+
+	getGroups() {
+		return this.data.groups;
+	}
+
+	getKillSwitch() {
+		return this.killSwitch;
+	}
+
+	setKillSwitch(on: boolean) {
+		this.killSwitch = on;
+		this.data.guards.killSwitch = on;
 	}
 
 	resolveRole(role: string, area: string): string[] {
@@ -73,12 +101,14 @@ export class FlowDeskConfigService {
 			this.lastError = { message: 'invalid config', position: 'areas.*.repo' };
 			return;
 		}
+		const prevKill = this.killSwitch;
 		this.data = next.config.data;
+		this.killSwitch = prevKill || Boolean(next.config.data.guards?.killSwitch);
 		this.lastError = null;
 	}
 
 	status() {
-		return { error: this.lastError };
+		return { error: this.lastError, killSwitch: this.killSwitch };
 	}
 
 	async ensureAreaStates(plane: { ensureProjectStates: () => Promise<unknown> }) {
