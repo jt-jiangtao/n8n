@@ -22,7 +22,12 @@ export class FlowDeskCiStep {
 		inputs: ['main'],
 		outputs: ['main', 'main', 'main'],
 		outputNames: ['pass', 'failure', 'maxAttempts'],
-		properties: [],
+		properties: [
+			{ displayName: 'Title', name: 'title', type: 'string', default: '' },
+			{ displayName: 'Suite', name: 'suite', type: 'string', default: 'targeted' },
+			{ displayName: 'Repeat', name: 'repeat', type: 'string', default: '' },
+			{ displayName: 'Compare With Base', name: 'compareWithBase', type: 'boolean', default: false },
+		],
 	}
 
 	async execute(this: Ctx) {
@@ -42,6 +47,8 @@ export class FlowDeskCiStep {
 			nodeType: 'flowDeskCiStep',
 			kind: 'ci',
 			suite: this.getNodeParameter('suite'),
+			repeat: this.getNodeParameter('repeat'),
+			compareWithBase: this.getNodeParameter('compareWithBase'),
 			workItem: input.workItem,
 			flowRunId: input.flowRunId,
 		})

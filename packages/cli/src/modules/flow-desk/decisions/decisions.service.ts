@@ -7,6 +7,7 @@ type DecisionInput = {
 	nodeId: string;
 	decision: string;
 	reason?: string;
+	text?: string;
 	actor: string;
 	source: 'panel' | 'comment' | 'state';
 	childIssueId: string;
@@ -19,6 +20,7 @@ type DecisionInput = {
 export class FlowDeskDecisionsService {
 	private waiting = new Map<string, boolean>();
 	private options = new Map<string, string[]>();
+	private requiresText = new Map<string, boolean>();
 	private seen = new Set<string>();
 
 	constructor(
@@ -48,6 +50,10 @@ export class FlowDeskDecisionsService {
 
 	setOptions(executionId: string, nodeId: string, opts: string[]) {
 		this.options.set(this.key(executionId, nodeId), opts);
+	}
+
+	setRequiresText(executionId: string, nodeId: string, required: boolean) {
+		this.requiresText.set(this.key(executionId, nodeId), required);
 	}
 
 	async submit(input: DecisionInput): Promise<{ ok: boolean }> {
@@ -82,6 +88,11 @@ export class FlowDeskDecisionsService {
 			return { ok: false };
 		}
 
+		if (this.requiresText.get(k) && !input.text?.trim()) {
+			await this.plane.comment(input.childIssueId, '必须填写文字回答');
+			return { ok: false };
+		}
+
 		const dedupe = `${k}:${input.decision}:${input.attempt}`;
 		if (this.seen.has(dedupe)) return { ok: true };
 		this.seen.add(dedupe);
@@ -89,11 +100,15 @@ export class FlowDeskDecisionsService {
 		const branch =
 			input.decision === 'approve' ? 'approve' : input.decision === 'reject' ? 'reject' : input.decision;
 
+		if (input.text?.trim()) {
+			await this.plane.comment(input.childIssueId, `回答: ${input.text.trim()}`);
+		}
+
 		await this.resume.resume({
 			executionId: input.executionId,
 			nodeId: input.nodeId,
 			branch,
-			data: { reason: input.reason, decidedBy: input.actor },
+			data: { reason: input.reason, text: input.text, decidedBy: input.actor },
 			attempt: input.attempt,
 		});
 		this.waiting.set(k, false);

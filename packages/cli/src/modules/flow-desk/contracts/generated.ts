@@ -198,6 +198,22 @@ export interface BootstrapOutput {
   }
 }
 
+// --- ci-step-params.schema.json ---
+/**
+ * Flow Desk CI Step 节点参数
+ */
+export interface CiStepParams {
+  title: string
+  suite: string
+  maxAttempts?: number
+  /**
+   * 重复次数；可为整数或配置表达式如 N / 5N
+   */
+  repeat?: number | string
+  compareWithBase?: boolean
+  proveRegression?: boolean
+}
+
 // --- commit-registration.schema.json ---
 /**
  * agent-runner 向模块登记的一次提交
@@ -210,6 +226,10 @@ export interface CommitRegistration {
   branch: string
   message?: string
   taskId?: string
+  /**
+   * 提交种类；回滚对应产品文案「回滚」
+   */
+  kind?: 'agent' | 'merge' | 'ci' | '回滚'
 }
 
 // --- flow-desk-proxy.schema.json ---
@@ -269,6 +289,29 @@ export interface FlowViewData {
   }[]
   definitionHash?: string
   flowType?: string
+}
+
+// --- human-step-params.schema.json ---
+/**
+ * Flow Desk Human Step 节点参数
+ */
+export interface HumanStepParams {
+  title: string
+  assigneeRole: string
+  options?: {
+    name: string
+    label: string
+  }[]
+  maxAttempts?: number
+  /**
+   * 必须附文字回答才能提交
+   */
+  requiresText?: boolean
+  /**
+   * 确认后冻结验收标准
+   */
+  freezeAcceptance?: boolean
+  waitHours?: number
 }
 
 // --- plane-events-response.schema.json ---

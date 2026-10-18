@@ -22,7 +22,11 @@ export class FlowDeskHumanStep {
 		defaults: { name: 'Human Step' },
 		inputs: ['main'],
 		outputs: ['main'],
-		properties: [],
+		properties: [
+			{ displayName: 'Title', name: 'title', type: 'string', default: '', required: true },
+			{ displayName: 'Assignee Role', name: 'assigneeRole', type: 'string', default: '' },
+			{ displayName: 'Requires Text', name: 'requiresText', type: 'boolean', default: false },
+		],
 	};
 
 	async execute(this: Ctx) {
@@ -42,6 +46,7 @@ export class FlowDeskHumanStep {
 			kind: 'human',
 			title: this.getNodeParameter('title'),
 			assigneeRole: this.getNodeParameter('assigneeRole'),
+			requiresText: this.getNodeParameter('requiresText'),
 		});
 		await this.putExecutionToWait(WAIT_INDEFINITELY);
 		return undefined;
