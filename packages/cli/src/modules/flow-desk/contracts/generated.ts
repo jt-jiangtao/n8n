@@ -386,6 +386,46 @@ export interface HumanStepParams {
   waitHours?: number
 }
 
+// --- metrics.schema.json ---
+/**
+ * 指标看板聚合结果
+ */
+export interface FlowDeskMetrics {
+  handlingTime: {
+    medianMs: number
+    p90Ms: number
+    byArea?: {
+      [k: string]: {}
+    }
+  }
+  confirmPassRate: {
+    rate: number
+    byNode?: {
+      [k: string]: number
+    }
+  }
+  rejectReasons: {
+    counts: {
+      [k: string]: number
+    }
+    recent: {
+      category: string
+      reason: string
+    }[]
+  }
+  escapeRate: {
+    rate: number
+    escapes: number
+    merges: number
+  }
+  agentDuration: {
+    medianMs: number
+    byAdapter?: {
+      [k: string]: number
+    }
+  }
+}
+
 // --- plane-events-response.schema.json ---
 /**
  * GET /api/flow-desk/internal/events 响应
