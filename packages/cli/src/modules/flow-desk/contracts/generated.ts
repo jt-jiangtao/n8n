@@ -718,6 +718,25 @@ export interface RuntimeSecrets {
   }
 }
 
+// --- signal-candidate.schema.json ---
+/**
+ * 本机信号产出的建单候选，经 intake 查重后进 Plane
+ */
+export interface SignalCandidate {
+  flowType: 'bug-standard' | 'bug-flaky' | 'chore-deps' | 'docs'
+  title: string
+  area: string
+  dedupeKey: string
+  evidence: string
+  reproduction?: string
+  failedTests?: string[]
+  runs?: {
+    attempt: number
+    passed: boolean
+    summary: string
+  }[]
+}
+
 // --- switch-flow-params.schema.json ---
 /**
  * Flow Desk Switch Flow 节点参数

@@ -98,11 +98,14 @@ export class FlowDeskIntakeService {
 		title: string;
 		reproduction: string;
 		evidence: string;
-		discoveredIn: string;
+		discoveredIn?: string;
 		area: string;
 		files?: string[];
 		dedupeKey?: string;
 		errorSignature?: string;
+		source?: 'agent' | 'signal' | 'human';
+		flowType?: string;
+		state?: string;
 	}): Promise<
 		| { ok: true; id: string; deduped?: boolean }
 		| { ok: false; missing: string[] }
@@ -122,19 +125,24 @@ export class FlowDeskIntakeService {
 		}
 
 		const area = this.config.getArea(input.area);
+		const source = input.source ?? 'agent';
+		const labels = [`source:${source}`, `area:${input.area}`];
+		if (input.flowType) labels.push(`flow:${input.flowType}`);
 		const issue = await this.plane.createIssue({
 			title: input.title,
 			description: `${input.reproduction}\n\nEvidence:\n${input.evidence}`,
-			labels: ['source:agent', `area:${input.area}`],
+			labels,
 			project: area?.plane.project,
-			state: '收件箱',
+			state: input.state ?? '收件箱',
 		});
-		await this.plane.createRelation(issue.id, input.discoveredIn, '发现于');
+		if (input.discoveredIn) {
+			await this.plane.createRelation(issue.id, input.discoveredIn, '发现于');
+		}
 		this.index.push({
 			id: issue.id,
 			title: input.title,
 			area: input.area,
-			state: '收件箱',
+			state: input.state ?? '收件箱',
 			dedupeKey: input.dedupeKey,
 			errorSignature: input.errorSignature,
 			files: input.files,
