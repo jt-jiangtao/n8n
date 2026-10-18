@@ -26,6 +26,7 @@ export class FlowDeskHumanStep {
 			{ displayName: 'Title', name: 'title', type: 'string', default: '', required: true },
 			{ displayName: 'Assignee Role', name: 'assigneeRole', type: 'string', default: '' },
 			{ displayName: 'Requires Text', name: 'requiresText', type: 'boolean', default: false },
+			{ displayName: 'Skip At Level', name: 'skipAtLevel', type: 'number', default: 0 },
 		],
 	};
 

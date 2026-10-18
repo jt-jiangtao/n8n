@@ -28,7 +28,12 @@ export class FlowDeskAgentStep {
 		inputs: ['main'],
 		outputs: ['main', 'main'],
 		outputNames: ['success', 'failure'],
-		properties: [],
+		properties: [
+			{ displayName: 'Title', name: 'title', type: 'string', default: '' },
+			{ displayName: 'Step', name: 'step', type: 'string', default: '' },
+			{ displayName: 'Writes', name: 'writes', type: 'boolean', default: true },
+			{ displayName: 'Max Attempts', name: 'maxAttempts', type: 'number', default: 3 },
+		],
 	};
 
 	async execute(this: Ctx) {

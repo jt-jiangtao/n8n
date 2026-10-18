@@ -11,6 +11,7 @@ export type AreaConfigFile = {
 			roles: Record<string, string[]>;
 			mergeMethod: string;
 			agent: { adapter: string };
+			autonomy?: Record<string, number>;
 		}
 	>;
 	groups: Record<string, string[]>;
@@ -20,7 +21,13 @@ export type AreaConfigFile = {
 		killSwitch?: boolean;
 	};
 	provenance: { escapeWindowDays: number };
-	desktop: { stopPlaneOnQuit: boolean; launchAtLogin: boolean; hostAddress: string };
+	desktop: { stopPlaneOnQuit?: boolean; launchAtLogin?: boolean; hostAddress: string };
+	autonomyPolicy?: {
+		window?: number;
+		minPassRate?: number;
+		maxEscapes?: number;
+		maxReturns?: number;
+	};
 };
 
 @Service()
@@ -63,6 +70,15 @@ export class FlowDeskConfigService {
 		return {
 			protectedPaths: this.data.guards.protectedPaths ?? [],
 			baselinePaths: this.data.guards.baselinePaths ?? [],
+		};
+	}
+
+	getAutonomyPolicy() {
+		return {
+			window: this.data.autonomyPolicy?.window ?? 20,
+			minPassRate: this.data.autonomyPolicy?.minPassRate ?? 0.9,
+			maxEscapes: this.data.autonomyPolicy?.maxEscapes ?? 0,
+			maxReturns: this.data.autonomyPolicy?.maxReturns ?? 2,
 		};
 	}
 
