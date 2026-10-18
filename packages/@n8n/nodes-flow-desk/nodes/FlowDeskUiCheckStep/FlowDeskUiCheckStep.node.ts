@@ -28,6 +28,13 @@ export class FlowDeskUiCheckStep {
 		properties: [
 			{ displayName: 'Title', name: 'title', type: 'string', default: '' },
 			{ displayName: 'Scope', name: 'scope', type: 'string', default: 'changed' },
+			{
+				displayName: 'Fail On Visual Change',
+				name: 'failOnVisualChange',
+				type: 'boolean',
+				default: false,
+			},
+			{ displayName: 'Max Attempts', name: 'maxAttempts', type: 'number', default: 2 },
 		],
 	};
 
@@ -56,6 +63,8 @@ export class FlowDeskUiCheckStep {
 			kind: 'ui-check',
 			title: this.getNodeParameter('title'),
 			scope: this.getNodeParameter('scope'),
+			failOnVisualChange: this.getNodeParameter('failOnVisualChange'),
+			maxAttempts: this.getNodeParameter('maxAttempts'),
 			workItem: input.workItem,
 			flowRunId: input.flowRunId,
 		});
@@ -66,6 +75,7 @@ export class FlowDeskUiCheckStep {
 				workItem: input.workItem,
 				area: input.area,
 				attempt: registered.attempt,
+				failOnVisualChange: this.getNodeParameter('failOnVisualChange'),
 			});
 		}
 		await this.putExecutionToWait(WAIT_INDEFINITELY);

@@ -27,6 +27,7 @@ export class FlowDeskQualityStep {
 		properties: [
 			{ displayName: 'Title', name: 'title', type: 'string', default: '' },
 			{ displayName: 'Scope', name: 'scope', type: 'string', default: 'changed' },
+			{ displayName: 'Max Attempts', name: 'maxAttempts', type: 'number', default: 2 },
 		],
 	};
 
