@@ -8,6 +8,8 @@ const ALLOWED = new Set([
 	'flowDeskCreateWorkItem',
 	'flowDeskAwaitChildren',
 	'flowDeskSwitchFlow',
+	'flowDeskUiCheckStep',
+	'flowDeskQualityStep',
 	'n8n-nodes-base.set',
 	'n8n-nodes-base.if',
 	'n8n-nodes-base.merge',

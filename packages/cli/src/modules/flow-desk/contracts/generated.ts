@@ -468,3 +468,43 @@ export interface SwitchFlowParams {
   reason: string
 }
 
+// --- ui-check-result.schema.json ---
+/**
+ * UI Check Step / agent-runner 界面检查结果
+ */
+export interface UiCheckResult {
+  status: 'pass' | 'new-errors' | 'cannot-run' | 'maxAttempts'
+  findings: Finding[]
+  visualChanges?: {
+    page: string
+    before: string
+    after: string
+  }[]
+  note?: string
+  sandboxed: false
+  hostBind?: string
+  port?: number
+}
+/**
+ * 界面检查与代码质量的「发现」
+ */
+export interface Finding {
+  fingerprint: string
+  rule: string
+  severity: boolean
+  level: 'error' | 'warning' | 'info'
+  source: 'deterministic' | 'agent'
+  message: string
+  location: {
+    kind: 'code' | 'ui'
+    file?: string
+    symbol?: string
+    contentHash?: string
+    page?: string
+    width?: number
+    theme?: string
+    selector?: string
+  }
+  status?: 'new' | 'existing' | 'fixed' | 'ignored'
+}
+
