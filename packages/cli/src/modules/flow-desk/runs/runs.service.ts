@@ -97,6 +97,89 @@ export class FlowDeskRunsService {
 		}
 	}
 
+	private runMeta = new Map<
+		string,
+		{ status: string; childIssueIds: string[]; doneIds: string[] }
+	>();
+
+	rememberChildren(executionId: string, childIssueIds: string[]) {
+		const meta = this.runMeta.get(executionId) ?? {
+			status: 'running',
+			childIssueIds: [],
+			doneIds: [],
+		};
+		meta.childIssueIds = [...new Set([...meta.childIssueIds, ...childIssueIds])];
+		this.runMeta.set(executionId, meta);
+	}
+
+	markChildDone(executionId: string, childIssueId: string) {
+		const meta = this.runMeta.get(executionId) ?? {
+			status: 'running',
+			childIssueIds: [],
+			doneIds: [],
+		};
+		if (!meta.doneIds.includes(childIssueId)) meta.doneIds.push(childIssueId);
+		this.runMeta.set(executionId, meta);
+	}
+
+	async markConverted(executionId: string) {
+		const meta = this.runMeta.get(executionId) ?? {
+			status: 'running',
+			childIssueIds: [],
+			doneIds: [],
+		};
+		meta.status = 'converted';
+		this.runMeta.set(executionId, meta);
+		for (const [issueId, run] of this.active) {
+			if (run.executionId === executionId) {
+				this.active.delete(issueId);
+				break;
+			}
+		}
+	}
+
+	async markSkippedRemaining(executionId: string) {
+		const meta = this.runMeta.get(executionId);
+		if (!meta) return;
+		const remaining = meta.childIssueIds.filter((id) => !meta.doneIds.includes(id));
+		for (const id of remaining) {
+			await this.plane.updateIssueState(id, '已跳过');
+		}
+	}
+
+	async startOnIssue(input: { issueId: string; flowType: string }) {
+		const issue = await this.plane.getIssue(input.issueId);
+		const areaLabels = issue.labels.filter((l) => l.startsWith('area:'));
+		const area = areaLabels[0]?.slice('area:'.length) ?? this.areas[0];
+		const workflow = await this.registry.findActiveByFlowType(input.flowType);
+		if (!workflow) throw new Error(`no active flow ${input.flowType}`);
+		const definitionHash = this.projection.definitionHash(workflow);
+		const started = await this.executions.start({
+			workflowId: workflow.id,
+			area,
+			parentIssueId: input.issueId,
+		});
+		const run = {
+			flowType: input.flowType,
+			definitionHash,
+			area,
+			executionId: started.executionId,
+		};
+		this.active.set(input.issueId, run);
+		this.snapshots.set(input.issueId, {
+			nodes: workflow.nodes,
+			connections: workflow.connections,
+			steps: [],
+			definitionHash,
+			flowType: input.flowType,
+		});
+		return started;
+	}
+
+	getRunStatus(executionId: string) {
+		return this.runMeta.get(executionId)?.status ?? null;
+	}
+
 	saveSnapshot(issueId: string, snapshot: Record<string, unknown>) {
 		this.snapshots.set(issueId, snapshot);
 	}

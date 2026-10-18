@@ -173,6 +173,18 @@ export interface Desktop {
   hostAddress: string
 }
 
+// --- await-children-params.schema.json ---
+/**
+ * Flow Desk Await Children 节点参数
+ */
+export interface AwaitChildrenParams {
+  title: string
+  /**
+   * 等待的关联类型，默认「跟进」
+   */
+  relationType?: string
+}
+
 // --- bootstrap-output.schema.json ---
 /**
  * flow_desk_bootstrap 管理命令的 JSON 输出
@@ -214,6 +226,21 @@ export interface FlowDeskProxyDecisionRequest {
    */
   actor?: string
   [k: string]: unknown
+}
+
+// --- flow-run.schema.json ---
+/**
+ * 一次流程运行的状态与元数据
+ */
+export interface FlowRun {
+  parentIssueId: string
+  flowType: string
+  executionId?: string | null
+  /**
+   * converted 对应产品文案「已转换」
+   */
+  status: 'running' | 'done' | 'failed' | 'cancelled' | 'converted'
+  switchCount?: number
 }
 
 // --- flow-view-data.schema.json ---
@@ -334,5 +361,14 @@ export interface RuntimeSecrets {
   agentCredentials?: {
     cursorApiKey?: string
   }
+}
+
+// --- switch-flow-params.schema.json ---
+/**
+ * Flow Desk Switch Flow 节点参数
+ */
+export interface SwitchFlowParams {
+  targetFlowType: string
+  reason: string
 }
 
