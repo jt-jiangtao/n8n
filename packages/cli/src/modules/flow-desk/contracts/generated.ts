@@ -363,6 +363,35 @@ export interface ProvenanceResult {
   }[]
 }
 
+// --- regression-proof-result.schema.json ---
+/**
+ * proveRegression 的两次运行结果
+ */
+export interface RegressionProofResult {
+  ok: boolean
+  reason?: string
+  missing?: string[]
+  before: {
+    summary?: string
+    ok?: boolean
+    cases?: {
+      name: string
+      file?: string
+      ok: boolean
+    }[]
+  } | null
+  after: {
+    summary?: string
+    ok?: boolean
+    cases?: {
+      name: string
+      file?: string
+      ok: boolean
+    }[]
+  } | null
+  proofWorktreeCleaned?: boolean
+}
+
 // --- runner-task-request.schema.json ---
 /**
  * 模块向 agent-runner POST /tasks 的请求体（AgentTask + area + flowRunId）
