@@ -232,7 +232,55 @@ export interface CommitRegistration {
   kind?: 'agent' | 'merge' | 'ci' | '回滚'
 }
 
+// --- finding-actions.schema.json ---
+/**
+ * Human Step 的逐条发现处理决定
+ */
+export interface FindingActions {
+  actions: {
+    fingerprint: string
+    action: 'create' | 'ignore' | 'defer'
+    reason?: string
+    createAs?: 'bug-standard' | 'feature-small' | 'chore-refactor'
+  }[]
+}
+
 // --- finding.schema.json ---
+/**
+ * 界面检查与代码质量的「发现」
+ */
+export interface Finding {
+  fingerprint: string
+  rule: string
+  severity: boolean
+  level: 'error' | 'warning' | 'info'
+  source: 'deterministic' | 'agent'
+  message: string
+  location: {
+    kind: 'code' | 'ui'
+    file?: string
+    symbol?: string
+    contentHash?: string
+    page?: string
+    width?: number
+    theme?: string
+    selector?: string
+  }
+  status?: 'new' | 'existing' | 'fixed' | 'ignored'
+}
+
+// --- findings-list.schema.json ---
+/**
+ * GET findings 列表接口
+ */
+export interface FindingsList {
+  items: Finding[]
+  filters?: {
+    kind?: string
+    level?: string
+    status?: string
+  }
+}
 /**
  * 界面检查与代码质量的「发现」
  */
