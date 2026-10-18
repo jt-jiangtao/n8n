@@ -40,7 +40,8 @@ export class FlowDeskConfigService {
 		error?: { position: string };
 		config?: FlowDeskConfigService;
 	} {
-		if (!raw.includes('areas:') || raw.includes('areas: [')) {
+		const hasAreas = raw.includes('areas:') || /"areas"\s*:/.test(raw);
+		if (!hasAreas || raw.includes('areas: [')) {
 			return { ok: false, error: { position: 'areas' } };
 		}
 		try {

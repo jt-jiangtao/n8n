@@ -2,30 +2,5 @@
   "name": "@n8n/nodes-flow-desk",
   "version": "0.1.0",
   "private": true,
-  "description": "Flow Desk n8n nodes",
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "build": "node ./scripts/build.mjs",
-    "typecheck": "node -e \"process.exit(0)\"",
-    "test": "vitest run"
-  },
-  "files": [
-    "dist"
-  ],
-  "n8n": {
-    "n8nNodesApiVersion": 1,
-    "credentials": [],
-    "nodes": [
-      "dist/nodes/FlowDeskTrigger/FlowDeskTrigger.node.js",
-      "dist/nodes/FlowDeskHumanStep/FlowDeskHumanStep.node.js",
-      "dist/nodes/FlowDeskAgentStep/FlowDeskAgentStep.node.js"
-    ]
-  },
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  },
-  "devDependencies": {
-    "vitest": "3.2.7"
-  }
+  "type": "module"
 }

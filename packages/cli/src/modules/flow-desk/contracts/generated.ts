@@ -200,6 +200,22 @@ export interface CommitRegistration {
   taskId?: string
 }
 
+// --- flow-desk-proxy.schema.json ---
+/**
+ * Plane 前端经代理提交的确认请求（actor 由会话注入）
+ */
+export interface FlowDeskProxyDecisionRequest {
+  decision: string
+  reason?: string
+  executionId: string
+  nodeId: string
+  /**
+   * MUST be ignored by proxy; overwritten from session
+   */
+  actor?: string
+  [k: string]: unknown
+}
+
 // --- flow-view-data.schema.json ---
 /**
  * GET /work-items/{id}/flow 返回的流程视图数据
