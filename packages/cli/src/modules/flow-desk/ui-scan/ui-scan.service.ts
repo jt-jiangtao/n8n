@@ -1,10 +1,10 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 export type ScanCatalog = {
 	prompt: { id: string; body: string; skills: string[]; taskTemplates: string[] };
-	skills: Record<string, string>;
+	root: string;
 	template: { id: string; fields: string[] };
 };
 
@@ -25,13 +25,9 @@ export function loadUiScanCatalog(root: string | undefined): ScanCatalog {
 		id: string;
 		fields: Array<{ name: string }>;
 	};
-	const skillBodies: Record<string, string> = {};
-	for (const id of skills) {
-		skillBodies[id] = readFileSync(path.join(root, 'catalog/skills', id, 'SKILL.md'), 'utf8');
-	}
 	return {
 		prompt: { id: 'ui-scan', body, skills, taskTemplates: ['ui-scan-bug'] },
-		skills: skillBodies,
+		root,
 		template: { id: template.id, fields: template.fields.map((field) => field.name) },
 	};
 }
@@ -95,12 +91,33 @@ export class UiScanService {
 			.map(({ id, title, status }) => ({ id, title, status }));
 	}
 
-	readSkill(token: string, skillId: string) {
+	listSkills(token: string) {
 		this.session(token);
-		if (!this.deps.catalog.prompt.skills.includes(skillId)) throw new Error('技能不在允许列表');
-		const body = this.deps.catalog.skills[skillId];
-		if (!body) throw new Error('技能不在允许列表');
-		return body;
+		return this.deps.catalog.prompt.skills.map((id) => ({
+			id,
+			description: descriptionOf(readFileSync(this.skillFile(id, 'SKILL.md'), 'utf8')),
+		}));
+	}
+
+	listSkillOutline(token: string, skillId: string) {
+		this.session(token);
+		this.assertAllowed(skillId);
+		const base = this.skillDir(skillId);
+		const files = walk(base)
+			.map((file) => path.relative(base, file).split(path.sep).join('/'))
+			.sort();
+		const headings = headingsOf(readFileSync(path.join(base, 'SKILL.md'), 'utf8'));
+		return { files, headings };
+	}
+
+	readSkill(token: string, skillId: string, selector?: { path?: string; heading?: string }) {
+		this.session(token);
+		this.assertAllowed(skillId);
+		const hasPath = selector?.path !== undefined;
+		const hasHeading = selector?.heading !== undefined;
+		if (hasPath === hasHeading) throw new Error('需要路径或标题');
+		if (hasPath) return readFileSync(this.skillFile(skillId, selector.path!), 'utf8');
+		return sectionOf(readFileSync(this.skillFile(skillId, 'SKILL.md'), 'utf8'), selector!.heading!);
 	}
 
 	async addTask(token: string, fields: Finding) {
@@ -153,4 +170,65 @@ export class UiScanService {
 		if (!row) throw new Error('凭证无效');
 		return row;
 	}
+
+	private assertAllowed(skillId: string) {
+		if (!this.deps.catalog.prompt.skills.includes(skillId)) throw new Error('技能不在允许列表');
+	}
+
+	private skillDir(skillId: string) {
+		return path.resolve(this.deps.catalog.root, 'catalog/skills', skillId);
+	}
+
+	private skillFile(skillId: string, rel: string) {
+		if (rel.includes('\0') || path.isAbsolute(rel)) throw new Error('路径越界');
+		const base = this.skillDir(skillId);
+		const target = path.resolve(base, rel);
+		if (target !== base && !target.startsWith(base + path.sep)) throw new Error('路径越界');
+		try {
+			if (!statSync(target).isFile()) throw new Error('路径越界');
+		} catch (error) {
+			if (error instanceof Error && error.message === '路径越界') throw error;
+			throw new Error('路径越界');
+		}
+		return target;
+	}
+}
+
+function descriptionOf(markdown: string) {
+	const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(markdown);
+	const line = (frontmatter?.[1] ?? '').split('\n').find((row) => row.startsWith('description:'));
+	return (line?.slice('description:'.length) ?? '').trim();
+}
+
+function headingsOf(markdown: string) {
+	return [...markdown.matchAll(/^(#{1,6})\s+(.+)$/gm)].map((match) => match[2].trim());
+}
+
+function sectionOf(markdown: string, heading: string) {
+	const lines = markdown.split('\n');
+	const start = lines.findIndex((line) => {
+		const match = /^(#{1,6})\s+(.*)$/.exec(line);
+		return match?.[2].trim() === heading;
+	});
+	if (start < 0) throw new Error('标题不存在');
+	const level = /^(#{1,6})/.exec(lines[start])![1].length;
+	let end = lines.length;
+	for (let i = start + 1; i < lines.length; i++) {
+		const match = /^(#{1,6})\s+/.exec(lines[i]);
+		if (match && match[1].length <= level) {
+			end = i;
+			break;
+		}
+	}
+	return lines.slice(start, end).join('\n').trim();
+}
+
+function walk(dir: string): string[] {
+	const files: string[] = [];
+	for (const name of readdirSync(dir)) {
+		const full = path.join(dir, name);
+		if (statSync(full).isDirectory()) files.push(...walk(full));
+		else files.push(full);
+	}
+	return files;
 }
