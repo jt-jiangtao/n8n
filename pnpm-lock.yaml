@@ -4725,7 +4725,7 @@ importers:
   packages/cli:
     dependencies:
       ajv:
-        specifier: ^8.18.0
+        specifier: 8.20.0
         version: 8.20.0
       '@1password/connect':
         specifier: 1.4.2
