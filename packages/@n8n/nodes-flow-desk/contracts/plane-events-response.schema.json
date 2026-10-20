@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/plane-events-response.schema.json",
+  "title": "PlaneEventsResponse",
+  "description": "GET /api/flow-desk/internal/events 响应",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["events"],
+  "properties": {
+    "events": {
+      "type": "array",
+      "items": { "$ref": "plane-outbox-event.schema.json" }
+    }
+  }
+}

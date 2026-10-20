@@ -1,0 +1,146 @@
+[
+  {
+    "type": "start",
+    "n8nType": "flowDeskStart",
+    "inputSchema": "workflow-start-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "record"
+  },
+  {
+    "type": "workspace",
+    "n8nType": "flowDeskWorkspace",
+    "inputSchema": "workflow-workspace-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "workspace"
+  },
+  {
+    "type": "command",
+    "n8nType": "flowDeskCommand",
+    "inputSchema": "workflow-command-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "project-command"
+  },
+  {
+    "type": "service",
+    "n8nType": "flowDeskService",
+    "inputSchema": "workflow-service-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "process"
+  },
+  {
+    "type": "agent",
+    "n8nType": "flowDeskAgent",
+    "inputSchema": "workflow-agent-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "project-files"
+  },
+  {
+    "type": "verify",
+    "n8nType": "flowDeskVerify",
+    "inputSchema": "workflow-verify-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "project-command"
+  },
+  {
+    "type": "approval",
+    "n8nType": "flowDeskApproval",
+    "inputSchema": "workflow-approval-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "human-decision"
+  },
+  {
+    "type": "work-item",
+    "n8nType": "flowDeskWorkItem",
+    "inputSchema": "workflow-work-item-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "plane-write"
+  },
+  {
+    "type": "integrate",
+    "n8nType": "flowDeskIntegrate",
+    "inputSchema": "workflow-integrate-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "git-write"
+  },
+  {
+    "type": "subflow",
+    "n8nType": "flowDeskSubflow",
+    "inputSchema": "workflow-subflow-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "child-run"
+  },
+  {
+    "type": "notify",
+    "n8nType": "flowDeskProjectNotify",
+    "inputSchema": "workflow-notify-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "external-notification"
+  },
+  {
+    "type": "finish",
+    "n8nType": "flowDeskFinish",
+    "inputSchema": "workflow-finish-params",
+    "outputSchema": "workflow-node-result",
+    "branches": [
+      "success",
+      "failure",
+      "blocked"
+    ],
+    "sideEffect": "cleanup"
+  }
+]

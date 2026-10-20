@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/bootstrap-output.schema.json",
+  "title": "BootstrapOutput",
+  "description": "flow_desk_bootstrap 管理命令的 JSON 输出",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["workspaceSlug", "systemProjectIdentifier", "tokens"],
+  "properties": {
+    "workspaceSlug": { "type": "string", "minLength": 1 },
+    "systemProjectIdentifier": { "type": "string", "minLength": 1 },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flowDesk", "agentBot"],
+      "properties": {
+        "flowDesk": { "type": "string", "minLength": 1 },
+        "agentBot": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

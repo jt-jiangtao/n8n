@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-finish-params.schema.json",
+  "title": "WorkflowFinishParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "outcome": {
+      "enum": [
+        "completed",
+        "failed",
+        "canceled"
+      ]
+    }
+  },
+  "required": [
+    "outcome"
+  ]
+}

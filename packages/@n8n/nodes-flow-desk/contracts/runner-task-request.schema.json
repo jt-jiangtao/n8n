@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/runner-task-request.schema.json",
+  "title": "RunnerTaskRequest",
+  "description": "模块向 agent-runner POST /tasks 的请求体（AgentTask + area + flowRunId）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "taskId",
+    "kind",
+    "workItem",
+    "step",
+    "attempt",
+    "repo",
+    "area",
+    "baseRef",
+    "instructions",
+    "acceptance",
+    "context",
+    "requiredFields",
+    "limits",
+    "flowRunId"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "ci",
+        "ui-check",
+        "quality",
+        "signal"
+      ]
+    },
+    "adapter": {
+      "type": "string",
+      "enum": [
+        "codex",
+        "cursor",
+        "fake"
+      ]
+    },
+    "readOnly": {
+      "type": "boolean"
+    },
+    "workItem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "step": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "area": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "instructions": {
+      "type": "string"
+    },
+    "acceptance": {
+      "type": "string"
+    },
+    "command": {
+      "type": "string"
+    },
+    "flowRunId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previousResults",
+        "rejectReasons"
+      ],
+      "properties": {
+        "previousResults": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "rejectReasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requiredFields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timeoutSeconds"
+      ],
+      "properties": {
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "actionDriverMcp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 5
+        }
+      },
+      "required": [
+        "command",
+        "args"
+      ]
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-verify-params.schema.json",
+  "title": "WorkflowVerifyParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "suites": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "requiredEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coverageRef": {
+      "type": "string"
+    },
+    "compareWithBase": {
+      "type": "boolean"
+    },
+    "repeat": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^/(?!/)"
+          }
+        }
+      },
+      "required": ["paths"]
+    },
+    "evidenceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": ["gate", "measure"]
+    },
+    "managedCli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": ["smoke", "verify-current"]
+        },
+        "versionRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["operation", "versionRef"]
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sampleSuite": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["sampleSuite"]
+    },
+    "resolves": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 64,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [],
+  "allOf": [
+    {
+      "if": {
+        "required": ["managedCli"]
+      },
+      "then": {
+        "maxProperties": 1
+      }
+    }
+  ]
+}

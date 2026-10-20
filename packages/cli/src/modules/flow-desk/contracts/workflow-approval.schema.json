@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-approval.schema.json",
+  "title": "WorkflowApproval",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configHash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidateSha": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetSha": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scopeHash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidenceHash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "approve",
+        "reject",
+        "terminate"
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "projectId",
+    "runId",
+    "configHash",
+    "candidateSha",
+    "targetSha",
+    "scopeHash",
+    "evidenceHash",
+    "actor",
+    "decision",
+    "digest",
+    "createdAt"
+  ]
+}

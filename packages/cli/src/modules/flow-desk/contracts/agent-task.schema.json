@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/agent-task.schema.json",
+  "title": "AgentTask",
+  "description": "agent-runner 接收的任务",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "taskId",
+    "kind",
+    "workItem",
+    "step",
+    "attempt",
+    "repo",
+    "baseRef",
+    "instructions",
+    "acceptance",
+    "context",
+    "requiredFields",
+    "limits"
+  ],
+  "properties": {
+    "taskId": { "type": "string", "minLength": 1 },
+    "kind": {
+      "type": "string",
+      "enum": ["agent", "ci", "ui-check", "quality", "signal"]
+    },
+    "adapter": { "type": "string", "enum": ["codex", "cursor", "fake"] },
+    "readOnly": { "type": "boolean" },
+    "ci": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repeat": { "type": "integer", "minimum": 1 },
+        "compareWithBase": { "type": "boolean" },
+        "proveRegression": { "type": "boolean" }
+      }
+    },
+    "cliVersion": { "type": "string", "minLength": 1 },
+    "workItem": { "type": "string", "minLength": 1 },
+    "step": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "repo": { "type": "string", "minLength": 1 },
+    "baseRef": { "type": "string", "minLength": 1 },
+    "instructions": { "type": "string" },
+    "acceptance": { "type": "string" },
+    "command": { "type": "string" },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previousResults", "rejectReasons"],
+      "properties": {
+        "previousResults": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "rejectReasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "requiredFields": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeoutSeconds"],
+      "properties": {
+        "timeoutSeconds": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

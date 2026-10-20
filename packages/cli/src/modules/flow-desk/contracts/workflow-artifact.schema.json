@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-artifact.schema.json",
+  "title": "WorkflowArtifact",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidateSha": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mimeType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uri": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "running-instance"
+        },
+        "version": {
+          "type": "string"
+        },
+        "candidateVerified": {
+          "const": false
+        },
+        "targetId": {
+          "type": "string"
+        },
+        "capturedAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "version",
+        "candidateVerified"
+      ]
+    },
+    "rootRunId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "id",
+    "projectId",
+    "runId",
+    "taskId",
+    "candidateSha",
+    "name",
+    "sha256",
+    "bytes",
+    "mimeType",
+    "uri"
+  ]
+}

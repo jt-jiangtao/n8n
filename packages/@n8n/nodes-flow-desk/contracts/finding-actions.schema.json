@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/finding-actions.schema.json",
+  "title": "FindingActions",
+  "description": "Human Step 的逐条发现处理决定",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["actions"],
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fingerprint", "action"],
+        "properties": {
+          "fingerprint": { "type": "string", "minLength": 1 },
+          "action": {
+            "type": "string",
+            "enum": ["create", "ignore", "defer"]
+          },
+          "reason": { "type": "string" },
+          "createAs": {
+            "type": "string",
+            "enum": ["bug-standard", "feature-small", "chore-refactor"]
+          }
+        }
+      }
+    }
+  }
+}

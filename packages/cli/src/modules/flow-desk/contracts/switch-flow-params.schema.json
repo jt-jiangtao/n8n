@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/switch-flow-params.schema.json",
+  "title": "SwitchFlowParams",
+  "description": "Flow Desk Switch Flow 节点参数",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["targetFlowType", "reason"],
+  "properties": {
+    "targetFlowType": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string", "minLength": 1 }
+  }
+}

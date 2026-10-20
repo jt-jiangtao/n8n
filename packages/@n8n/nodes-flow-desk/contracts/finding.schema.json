@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/finding.schema.json",
+  "title": "Finding",
+  "description": "界面检查与代码质量的「发现」",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fingerprint",
+    "rule",
+    "severity",
+    "level",
+    "source",
+    "message",
+    "location"
+  ],
+  "properties": {
+    "fingerprint": { "type": "string", "minLength": 1 },
+    "rule": { "type": "string", "minLength": 1 },
+    "severity": { "type": "boolean" },
+    "level": { "type": "string", "enum": ["error", "warning", "info"] },
+    "source": { "type": "string", "enum": ["deterministic", "agent"] },
+    "message": { "type": "string" },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["code", "ui"] },
+        "file": { "type": "string" },
+        "symbol": { "type": "string" },
+        "contentHash": { "type": "string" },
+        "page": { "type": "string" },
+        "width": { "type": "integer" },
+        "theme": { "type": "string" },
+        "selector": { "type": "string" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["new", "existing", "fixed", "ignored"]
+    }
+  }
+}

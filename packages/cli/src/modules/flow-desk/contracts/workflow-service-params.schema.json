@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-service-params.schema.json",
+  "title": "WorkflowServiceParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "serviceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation": {
+      "enum": [
+        "start",
+        "status",
+        "stop"
+      ]
+    }
+  },
+  "required": [
+    "serviceRef",
+    "operation"
+  ]
+}

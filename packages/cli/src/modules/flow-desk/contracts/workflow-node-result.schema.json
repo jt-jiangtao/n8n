@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-node-result.schema.json",
+  "title": "WorkflowNodeResult",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "waiting-approval",
+        "passed",
+        "failed",
+        "blocked",
+        "timed-out",
+        "canceled",
+        "exceeded",
+        "skipped"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "string"
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "resourceIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "status"
+  ]
+}

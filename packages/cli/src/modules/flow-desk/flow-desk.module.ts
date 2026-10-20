@@ -14,6 +14,13 @@ export class FlowDeskModule implements ModuleInterface {
 
 	async init() {
 		await import('./flow-desk.controller.js');
+		await import('./projects/project.controller.js');
+		const { ProjectRuntimeService } = await import('./projects/project-runtime.service.js');
+		Container.get(ProjectRuntimeService).startWatching();
+		const { EventService } = await import('@n8n/backend-services');
+		Container.get(EventService).on('execution-cancelled', ({ executionId }) => {
+			void Container.get(ProjectRuntimeService).cancelIfKnown(String(executionId));
+		});
 
 		const events = new Map<string, { dedupeKey: string }>();
 		let cursor = 0;
@@ -62,12 +69,14 @@ export class FlowDeskModule implements ModuleInterface {
 	}
 
 	async entities() {
+		const { ProjectRecordEntity } = await import('./database/project-record.entity.js');
 		const { FlowDeskEventEntity } = await import('./database/flow-desk-event.entity.js');
 		const { FlowDeskCursorEntity } = await import('./database/flow-desk-cursor.entity.js');
 		const { FlowDeskRunEntity } = await import('./database/flow-desk-run.entity.js');
 		const { FlowDeskStepEntity } = await import('./database/flow-desk-step.entity.js');
 		const { FlowDeskCommitEntity } = await import('./database/flow-desk-commit.entity.js');
 		return [
+			ProjectRecordEntity,
 			FlowDeskEventEntity,
 			FlowDeskCursorEntity,
 			FlowDeskRunEntity,
@@ -78,6 +87,8 @@ export class FlowDeskModule implements ModuleInterface {
 
 	@OnShutdown()
 	async shutdown() {
+		const { ProjectRuntimeService } = await import('./projects/project-runtime.service.js');
+		Container.get(ProjectRuntimeService).stopWatching();
 		if (this.pollTimer) clearInterval(this.pollTimer);
 	}
 }

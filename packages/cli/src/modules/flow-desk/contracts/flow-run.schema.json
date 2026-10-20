@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/flow-run.schema.json",
+  "title": "FlowRun",
+  "description": "一次流程运行的状态与元数据",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["parentIssueId", "flowType", "status"],
+  "properties": {
+    "parentIssueId": { "type": "string", "minLength": 1 },
+    "flowType": { "type": "string", "minLength": 1 },
+    "executionId": { "type": ["string", "null"] },
+    "status": {
+      "type": "string",
+      "enum": ["running", "done", "failed", "cancelled", "converted"],
+      "description": "converted 对应产品文案「已转换」"
+    },
+    "switchCount": { "type": "integer", "minimum": 0, "maximum": 3 }
+  }
+}

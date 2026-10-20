@@ -2,5 +2,42 @@
   "name": "@n8n/nodes-flow-desk",
   "version": "0.1.0",
   "private": true,
-  "type": "module"
+  "type": "commonjs",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "6.0.2",
+    "vitest": "catalog:"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [],
+    "nodes": [
+      "dist/nodes/FlowDeskStart/FlowDeskStart.node.js",
+      "dist/nodes/FlowDeskWorkspace/FlowDeskWorkspace.node.js",
+      "dist/nodes/FlowDeskCommand/FlowDeskCommand.node.js",
+      "dist/nodes/FlowDeskService/FlowDeskService.node.js",
+      "dist/nodes/FlowDeskAgent/FlowDeskAgent.node.js",
+      "dist/nodes/FlowDeskVerify/FlowDeskVerify.node.js",
+      "dist/nodes/FlowDeskApproval/FlowDeskApproval.node.js",
+      "dist/nodes/FlowDeskWorkItem/FlowDeskWorkItem.node.js",
+      "dist/nodes/FlowDeskIntegrate/FlowDeskIntegrate.node.js",
+      "dist/nodes/FlowDeskSubflow/FlowDeskSubflow.node.js",
+      "dist/nodes/FlowDeskProjectNotify/FlowDeskProjectNotify.node.js",
+      "dist/nodes/FlowDeskFinish/FlowDeskFinish.node.js",
+      "dist/nodes/FlowDeskTrigger/FlowDeskTrigger.node.js",
+      "dist/nodes/FlowDeskHumanStep/FlowDeskHumanStep.node.js",
+      "dist/nodes/FlowDeskAgentStep/FlowDeskAgentStep.node.js",
+      "dist/nodes/FlowDeskCreateWorkItem/FlowDeskCreateWorkItem.node.js",
+      "dist/nodes/FlowDeskNotify/FlowDeskNotify.node.js",
+      "dist/nodes/FlowDeskEndCheck/FlowDeskEndCheck.node.js",
+      "dist/nodes/FlowDeskCondition/FlowDeskCondition.node.js"
+    ]
+  }
 }

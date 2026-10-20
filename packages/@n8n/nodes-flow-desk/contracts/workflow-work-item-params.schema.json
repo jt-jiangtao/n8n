@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-work-item-params.schema.json",
+  "title": "WorkflowWorkItemParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "operation": {
+      "enum": [
+        "create",
+        "update",
+        "link"
+      ]
+    },
+    "templateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "itemsRef": {
+      "type": "string"
+    },
+    "relation": {
+      "type": "string"
+    },
+    "dedupeBy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

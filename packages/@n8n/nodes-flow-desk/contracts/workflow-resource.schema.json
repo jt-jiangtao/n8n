@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-resource.schema.json",
+  "title": "WorkflowResource",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "enum": [
+        "service",
+        "worktree",
+        "temporary"
+      ]
+    },
+    "owned": {
+      "type": "boolean"
+    },
+    "pid": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "url": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "starting",
+        "ready",
+        "exited",
+        "stopped",
+        "cleanup-failed",
+        "released"
+      ]
+    },
+    "candidateSha": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "runId",
+    "workspaceId",
+    "kind",
+    "owned",
+    "status"
+  ]
+}

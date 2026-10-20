@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/ci-step-params.schema.json",
+  "title": "CiStepParams",
+  "description": "Flow Desk CI Step 节点参数",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "suite"],
+  "properties": {
+    "title": { "type": "string", "minLength": 1 },
+    "suite": { "type": "string", "minLength": 1 },
+    "maxAttempts": { "type": "integer", "minimum": 1 },
+    "repeat": {
+      "description": "重复次数；可为整数或配置表达式如 N / 5N",
+      "oneOf": [
+        { "type": "integer", "minimum": 1 },
+        { "type": "string", "minLength": 1 }
+      ]
+    },
+    "compareWithBase": { "type": "boolean" },
+    "proveRegression": { "type": "boolean" }
+  }
+}

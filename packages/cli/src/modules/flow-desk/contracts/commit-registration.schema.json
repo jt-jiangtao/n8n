@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/commit-registration.schema.json",
+  "title": "CommitRegistration",
+  "description": "agent-runner 向模块登记的一次提交",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sha", "workItem", "flowRunId", "area", "branch"],
+  "properties": {
+    "sha": { "type": "string", "minLength": 7 },
+    "workItem": { "type": "string", "minLength": 1 },
+    "flowRunId": { "type": "string", "minLength": 1 },
+    "area": { "type": "string", "minLength": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "message": { "type": "string" },
+    "taskId": { "type": "string" },
+    "kind": {
+      "type": "string",
+      "enum": ["agent", "merge", "ci", "回滚"],
+      "description": "提交种类；回滚对应产品文案「回滚」"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-condition-params.schema.json",
+  "title": "WorkflowConditionParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "valueRef": { "type": "string", "minLength": 1 },
+    "operator": { "enum": ["equals", "not-equals", "empty", "not-empty"] },
+    "equals": {}
+  },
+  "required": ["valueRef"],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "operator": { "enum": ["empty", "not-empty"] } },
+        "required": ["operator"]
+      },
+      "then": {},
+      "else": { "required": ["equals"] }
+    }
+  ]
+}

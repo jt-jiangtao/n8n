@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-notify-params.schema.json",
+  "title": "WorkflowNotifyParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "channel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "templateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "required": {
+      "type": "boolean"
+    }
+  },
+  "required": []
+}

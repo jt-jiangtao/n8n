@@ -1,5 +1,5 @@
 import path from 'path';
-import { writeFileSync, readFileSync, rmSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, readFileSync, rmSync, existsSync, mkdirSync, cpSync } from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import shell from 'shelljs';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
@@ -20,6 +20,7 @@ const publicApiEnabled = process.env.N8N_PUBLIC_API_DISABLED !== 'true';
 generateUserManagementEmailTemplates();
 generateTimezoneData();
 copyAgentIntegrationAssets();
+cpSync(path.resolve(ROOT_DIR, 'src/modules/flow-desk/contracts'), path.resolve(ROOT_DIR, 'dist/modules/flow-desk/contracts'), { recursive: true });
 
 if (publicApiEnabled) {
 	createPublicApiDirectory();

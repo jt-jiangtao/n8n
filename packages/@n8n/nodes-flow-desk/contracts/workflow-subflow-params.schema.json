@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-subflow-params.schema.json",
+  "title": "WorkflowSubflowParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "flowRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "itemsRef": {
+      "type": "string"
+    },
+    "concurrency": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 32
+    },
+    "join": {
+      "enum": [
+        "all",
+        "any"
+      ]
+    },
+    "allowEmpty": {
+      "type": "boolean"
+    },
+    "target": {
+      "enum": [
+        "base",
+        "integration"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "flowRef"
+  ]
+}

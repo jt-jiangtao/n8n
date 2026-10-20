@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/plane-outbox-event.schema.json",
+  "title": "PlaneOutboxEvent",
+  "description": "Plane flow_desk_outbox 中的一行事件",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "issueId", "projectId", "workspaceId", "payload", "createdAt"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "kind": {
+      "type": "string",
+      "enum": ["state", "labels", "comment"]
+    },
+    "issueId": { "type": "string", "minLength": 1 },
+    "projectId": { "type": "string", "minLength": 1 },
+    "workspaceId": { "type": "string", "minLength": 1 },
+    "actorId": { "type": ["string", "null"] },
+    "payload": { "type": "object" },
+    "createdAt": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/flow-desk-proxy.schema.json",
+  "title": "FlowDeskProxyDecisionRequest",
+  "description": "Plane 前端经代理提交的确认请求（actor 由会话注入）",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["decision", "executionId", "nodeId"],
+  "properties": {
+    "decision": { "type": "string", "minLength": 1 },
+    "reason": { "type": "string" },
+    "executionId": { "type": "string", "minLength": 1 },
+    "nodeId": { "type": "string", "minLength": 1 },
+    "actor": { "type": "string", "description": "MUST be ignored by proxy; overwritten from session" }
+  }
+}

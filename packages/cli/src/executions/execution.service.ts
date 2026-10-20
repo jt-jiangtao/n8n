@@ -632,6 +632,12 @@ export class ExecutionService {
 				execution.id,
 				new ManualExecutionCancelledError(execution.id),
 			);
+		} else {
+			this.eventService.emit('execution-cancelled', {
+				executionId: execution.id,
+				workflowId: execution.workflowId,
+				reason: new ManualExecutionCancelledError(execution.id).reason,
+			});
 		}
 
 		if (this.waitTracker.has(execution.id)) {
@@ -647,6 +653,12 @@ export class ExecutionService {
 				execution.id,
 				new ManualExecutionCancelledError(execution.id),
 			);
+		} else {
+			this.eventService.emit('execution-cancelled', {
+				executionId: execution.id,
+				workflowId: execution.workflowId,
+				reason: new ManualExecutionCancelledError(execution.id).reason,
+			});
 		}
 
 		if (this.waitTracker.has(execution.id)) {

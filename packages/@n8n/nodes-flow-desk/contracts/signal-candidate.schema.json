@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/signal-candidate.schema.json",
+  "title": "SignalCandidate",
+  "description": "本机信号产出的建单候选，经 intake 查重后进 Plane",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flowType", "title", "area", "dedupeKey", "evidence"],
+  "properties": {
+    "flowType": {
+      "type": "string",
+      "enum": ["bug-standard", "bug-flaky", "chore-deps", "docs"]
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "area": { "type": "string", "minLength": 1 },
+    "dedupeKey": { "type": "string", "minLength": 1 },
+    "evidence": { "type": "string" },
+    "reproduction": { "type": "string" },
+    "failedTests": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attempt", "passed", "summary"],
+        "properties": {
+          "attempt": { "type": "integer", "minimum": 1 },
+          "passed": { "type": "boolean" },
+          "summary": { "type": "string" }
+        }
+      }
+    }
+  }
+}

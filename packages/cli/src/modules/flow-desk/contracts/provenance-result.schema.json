@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/provenance-result.schema.json",
+  "title": "ProvenanceResult",
+  "description": "bug 修复后在 baseRef 上查出的引入提交",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["introducingCommits"],
+  "properties": {
+    "introducingCommits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sha", "file"],
+        "properties": {
+          "sha": { "type": "string", "minLength": 7 },
+          "file": { "type": "string", "minLength": 1 },
+          "line": { "type": "integer", "minimum": 1 },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

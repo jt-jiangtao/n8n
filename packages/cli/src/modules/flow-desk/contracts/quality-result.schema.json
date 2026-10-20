@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/quality-result.schema.json",
+  "title": "QualityResult",
+  "description": "Quality Step / agent-runner 代码质量检查结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "findings"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["pass", "new-errors", "cannot-run", "maxAttempts"]
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "finding.schema.json" }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hotspots": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "evidence", "alternatives", "recommendation"],
+        "properties": {
+          "title": { "type": "string" },
+          "evidence": { "type": "string" },
+          "alternatives": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["approach", "benefit", "cost", "risk"],
+              "properties": {
+                "approach": { "type": "string" },
+                "benefit": { "type": "string" },
+                "cost": { "type": "string" },
+                "risk": { "type": "string" }
+              }
+            }
+          },
+          "recommendation": { "type": "string" }
+        }
+      }
+    }
+  }
+}

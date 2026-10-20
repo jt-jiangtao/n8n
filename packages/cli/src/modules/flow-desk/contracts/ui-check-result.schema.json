@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/ui-check-result.schema.json",
+  "title": "UiCheckResult",
+  "description": "UI Check Step / agent-runner 界面检查结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "findings", "sandboxed"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["pass", "new-errors", "cannot-run", "maxAttempts"]
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "finding.schema.json" }
+    },
+    "visualChanges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page", "before", "after"],
+        "properties": {
+          "page": { "type": "string" },
+          "before": { "type": "string" },
+          "after": { "type": "string" }
+        }
+      }
+    },
+    "note": { "type": "string" },
+    "sandboxed": { "type": "boolean", "const": false },
+    "hostBind": { "type": "string" },
+    "port": { "type": "integer" }
+  }
+}

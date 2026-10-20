@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-integrate-params.schema.json",
+  "title": "WorkflowIntegrateParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "operation": {
+      "enum": ["merge", "revert"]
+    },
+    "approvalRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verificationRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target": {
+      "enum": ["base", "integration"]
+    },
+    "revertRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["operation", "approvalRef", "verificationRef"],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "revert"
+          }
+        },
+        "required": ["operation"]
+      },
+      "then": {
+        "required": ["revertRef"]
+      }
+    }
+  ]
+}

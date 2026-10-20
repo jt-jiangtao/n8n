@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-execution.schema.json",
+  "title": "WorkflowExecution",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "projectId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nodeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "instanceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configHash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "waiting-approval",
+        "passed",
+        "failed",
+        "blocked",
+        "timed-out",
+        "canceled",
+        "exceeded",
+        "skipped"
+      ]
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "baseSha": {
+      "type": "string"
+    },
+    "candidateSha": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "resourceIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "projectId",
+    "runId",
+    "nodeId",
+    "attempt",
+    "taskId",
+    "instanceId",
+    "configHash",
+    "status"
+  ]
+}

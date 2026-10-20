@@ -27,6 +27,7 @@ export class FlowDeskHumanStep {
 			{ displayName: 'Assignee Role', name: 'assigneeRole', type: 'string', default: '' },
 			{ displayName: 'Requires Text', name: 'requiresText', type: 'boolean', default: false },
 			{ displayName: 'Skip At Level', name: 'skipAtLevel', type: 'number', default: 0 },
+			{ displayName: 'Required Evidence', name: 'requiredEvidence', type: 'json', default: '[]' },
 		],
 	};
 
@@ -48,8 +49,9 @@ export class FlowDeskHumanStep {
 			title: this.getNodeParameter('title'),
 			assigneeRole: this.getNodeParameter('assigneeRole'),
 			requiresText: this.getNodeParameter('requiresText'),
+			requiredEvidence: this.getNodeParameter('requiredEvidence'),
 		});
 		await this.putExecutionToWait(WAIT_INDEFINITELY);
-		return undefined;
+		return [this.getInputData()];
 	}
 }

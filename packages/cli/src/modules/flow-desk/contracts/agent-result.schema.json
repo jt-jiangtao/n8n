@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/agent-result.schema.json",
+  "title": "AgentResult",
+  "description": "agent-runner 整理后的固定结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workItem",
+    "step",
+    "attempt",
+    "summary",
+    "changes",
+    "verification",
+    "regression",
+    "risks",
+    "needsFromHuman"
+  ],
+  "properties": {
+    "workItem": { "type": "string", "minLength": 1 },
+    "step": { "type": "string", "minLength": 1 },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "summary": { "type": "string" },
+    "changes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files"],
+      "properties": {
+        "branch": { "type": "string" },
+        "pr": { "type": "string" },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "reasoning": { "type": "string" },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["howToCheck", "tests"],
+      "properties": {
+        "howToCheck": { "type": "string" },
+        "tests": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "regression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["suite"],
+      "properties": {
+        "suite": { "type": "string", "minLength": 1 }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "needsFromHuman": { "type": "string" },
+    "newIssues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "reproduction", "evidence"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1 },
+          "reproduction": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "string", "minLength": 1 },
+          "files": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "sandboxed": { "type": "boolean" },
+    "status": {
+      "type": "string",
+      "enum": ["ok", "failed", "aborted"]
+    },
+    "error": { "type": "string" }
+  }
+}

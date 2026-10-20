@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-agent-params.schema.json",
+  "title": "WorkflowAgentParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "promptRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skillRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "schemaRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter": {
+      "enum": ["codex", "cursor"]
+    },
+    "model": {
+      "type": "string"
+    },
+    "writes": {
+      "type": "boolean"
+    },
+    "sessionPolicy": {
+      "enum": ["new", "continue"]
+    },
+    "maxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "requireTaskList": {
+      "type": "boolean"
+    },
+    "resolveConflicts": {
+      "type": "boolean"
+    }
+  },
+  "required": ["promptRef", "schemaRef"]
+}

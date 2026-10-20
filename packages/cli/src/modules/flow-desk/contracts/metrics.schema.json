@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/metrics.schema.json",
+  "title": "FlowDeskMetrics",
+  "description": "指标看板聚合结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["handlingTime", "confirmPassRate", "rejectReasons", "escapeRate", "agentDuration"],
+  "properties": {
+    "handlingTime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["medianMs", "p90Ms"],
+      "properties": {
+        "medianMs": { "type": "number" },
+        "p90Ms": { "type": "number" },
+        "byArea": { "type": "object", "additionalProperties": { "type": "object" } }
+      }
+    },
+    "confirmPassRate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rate"],
+      "properties": {
+        "rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "byNode": { "type": "object", "additionalProperties": { "type": "number" } }
+      }
+    },
+    "rejectReasons": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["counts", "recent"],
+      "properties": {
+        "counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "recent": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["category", "reason"],
+            "properties": {
+              "category": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "escapeRate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rate", "escapes", "merges"],
+      "properties": {
+        "rate": { "type": "number" },
+        "escapes": { "type": "integer" },
+        "merges": { "type": "integer" }
+      }
+    },
+    "agentDuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["medianMs"],
+      "properties": {
+        "medianMs": { "type": "number" },
+        "byAdapter": { "type": "object", "additionalProperties": { "type": "number" } }
+      }
+    }
+  }
+}

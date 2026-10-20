@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/findings-list.schema.json",
+  "title": "FindingsList",
+  "description": "GET findings 列表接口",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": { "$ref": "finding.schema.json" }
+    },
+    "filters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string" },
+        "level": { "type": "string" },
+        "status": { "type": "string" }
+      }
+    }
+  }
+}

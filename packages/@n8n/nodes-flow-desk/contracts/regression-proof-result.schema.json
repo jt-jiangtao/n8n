@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/regression-proof-result.schema.json",
+  "title": "RegressionProofResult",
+  "description": "proveRegression 的两次运行结果",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ok", "before", "after"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "reason": { "type": "string" },
+    "missing": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "before": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "ok": { "type": "boolean" },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "ok"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "ok": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "after": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "ok": { "type": "boolean" },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "ok"],
+            "properties": {
+              "name": { "type": "string" },
+              "file": { "type": "string" },
+              "ok": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "proofWorktreeCleaned": { "type": "boolean" }
+  }
+}

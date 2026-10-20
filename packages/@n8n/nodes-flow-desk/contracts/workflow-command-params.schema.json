@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/workflow-command-params.schema.json",
+  "title": "WorkflowCommandParams",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "commandRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "command": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cwd": {
+      "type": "string"
+    },
+    "timeoutMs": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600000
+    },
+    "env": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "argv": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["ref"]
+          }
+        ]
+      }
+    },
+    "managedCli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": ["install", "switch", "rollback"]
+        },
+        "versionRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approvalRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verificationRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expectedVersionRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "smokeRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": ["operation", "versionRef", "approvalRef"]
+    }
+  },
+  "oneOf": [
+    {
+      "required": ["commandRef"],
+      "not": {
+        "anyOf": [
+          {
+            "required": ["command"]
+          },
+          {
+            "required": ["managedCli"]
+          }
+        ]
+      }
+    },
+    {
+      "required": ["command"],
+      "not": {
+        "anyOf": [
+          {
+            "required": ["commandRef"]
+          },
+          {
+            "required": ["managedCli"]
+          }
+        ]
+      }
+    },
+    {
+      "required": ["managedCli"],
+      "not": {
+        "anyOf": [
+          {
+            "required": ["commandRef"]
+          },
+          {
+            "required": ["command"]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/flow-replay.schema.json",
+  "title": "FlowReplayResult",
+  "description": "流程重放结果（meta-retro）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flowType", "runs"],
+  "properties": {
+    "flowType": { "type": "string" },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["runId", "originalOutcome", "status"],
+        "properties": {
+          "runId": { "type": "string" },
+          "originalOutcome": { "type": "string" },
+          "newOutcome": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["same", "worse", "unreplayable", "improved"]
+          },
+          "missingNodes": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "worseCount": { "type": "integer", "minimum": 0 }
+  }
+}

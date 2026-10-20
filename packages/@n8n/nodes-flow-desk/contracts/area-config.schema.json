@@ -1,0 +1,360 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/area-config.schema.json",
+  "title": "AreaConfig",
+  "description": "flow-desk.yaml 区域配置（配置仓库中的唯一定义）",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "areas",
+    "desktop"
+  ],
+  "properties": {
+    "areas": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/area"
+      }
+    },
+    "groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "guards": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protectedPaths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "escapeWindowDays": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "schedules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/schedule"
+      }
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/signal"
+      }
+    },
+    "autonomyPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "window": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minPassRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "maxEscapes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxReturns": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "agentCli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "codex": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version"
+          ],
+          "properties": {
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "previous": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "desktop": {
+      "$ref": "#/$defs/desktop"
+    }
+  },
+  "$defs": {
+    "desktop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hostAddress"
+      ],
+      "properties": {
+        "stopPlaneOnQuit": {
+          "type": "boolean"
+        },
+        "launchAtLogin": {
+          "type": "boolean"
+        },
+        "hostAddress": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plane",
+        "repo",
+        "baseRef",
+        "suites",
+        "roles",
+        "mergeMethod",
+        "agent"
+      ],
+      "properties": {
+        "plane": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "project"
+          ],
+          "properties": {
+            "project": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "repo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "baseRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "suites": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "targeted",
+            "full"
+          ],
+          "properties": {
+            "targeted": {
+              "type": "string",
+              "minLength": 1
+            },
+            "full": {
+              "type": "string",
+              "minLength": 1
+            },
+            "smoke": {
+              "type": "string",
+              "minLength": 1
+            },
+            "proof": {
+              "type": "string",
+              "minLength": 1
+            },
+            "snapshot": {
+              "type": "string",
+              "minLength": 1
+            },
+            "docs": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "roles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "flakyReruns": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "ui": {
+          "type": "object"
+        },
+        "quality": {
+          "type": "object"
+        },
+        "mergeMethod": {
+          "type": "string",
+          "enum": [
+            "squash",
+            "merge",
+            "rebase"
+          ]
+        },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adapter"
+          ],
+          "properties": {
+            "adapter": {
+              "type": "string",
+              "enum": [
+                "codex",
+                "cursor"
+              ]
+            }
+          }
+        },
+        "autonomy": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          }
+        },
+        "actionDriverMcp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "command": {
+              "type": "string",
+              "minLength": 1
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 5
+            }
+          },
+          "required": [
+            "command",
+            "args"
+          ]
+        }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "flow",
+        "area",
+        "every"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "flow": {
+          "type": "string",
+          "minLength": 1
+        },
+        "area": {
+          "type": "string",
+          "minLength": 1
+        },
+        "every": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dailyLimit": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "area",
+        "source",
+        "every"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "area": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "main-regression",
+            "dependencies",
+            "docs-drift"
+          ]
+        },
+        "every": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dailyLimit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "autoStart": {
+          "type": "boolean"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

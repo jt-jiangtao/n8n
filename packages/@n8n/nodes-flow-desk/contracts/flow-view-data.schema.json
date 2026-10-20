@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flow-desk.local/schemas/flow-view-data.schema.json",
+  "title": "FlowViewData",
+  "description": "GET /work-items/{id}/flow 返回的流程视图数据",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["nodes", "connections", "steps"],
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "position": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      }
+    },
+    "connections": { "type": "object" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["nodeId", "status", "attempt"],
+        "properties": {
+          "nodeId": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "waiting", "running", "done", "failed", "skipped"]
+          },
+          "attempt": { "type": "integer", "minimum": 0 },
+          "childIssueId": { "type": ["string", "null"] },
+          "assigneeRole": { "type": "string" },
+          "executionUrl": { "type": "string" }
+        }
+      }
+    },
+    "definitionHash": { "type": "string" },
+    "flowType": { "type": "string" }
+  }
+}

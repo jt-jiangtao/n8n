@@ -138,6 +138,13 @@ export interface Area {
   autonomy?: {
     [k: string]: number
   }
+  actionDriverMcp?: {
+    command: string
+    /**
+     * @minItems 5
+     */
+    args: [string, string, string, string, string, ...string[]]
+  }
 }
 /**
  * This interface was referenced by `AreaConfig`'s JSON-Schema
@@ -478,6 +485,89 @@ export interface PlaneOutboxEvent {
   createdAt: string
 }
 
+// --- project-workflow.schema.json ---
+export interface ProjectWorkflowConfig {
+  version: 1
+  projectId: string
+  name: string
+  repo: string
+  baseRef: string
+  flows: {
+    [k: string]: string
+  }
+  prompts: {
+    [k: string]: string
+  }
+  skills: {
+    [k: string]: {
+      path: string
+      hash?: string
+    }
+  }
+  schemas: {
+    [k: string]: string
+  }
+  commands?: {
+    [k: string]: {
+      command: string
+      cwd?: string
+      timeoutMs?: number
+      env?: {
+        [k: string]: string
+      }
+      artifacts?: string[]
+      /**
+       * @maxItems 100
+       */
+      argv?: string[]
+    }
+  }
+  services?: {
+    [k: string]: {
+      [k: string]: unknown
+    }
+  }
+  preparation: {
+    commands: string[]
+    services: string[]
+  }
+  verification: {
+    [k: string]: {
+      commandRef: string
+      report: {
+        format: 'exit-code' | 'junit' | 'json'
+        path?: string
+      }
+      required?: boolean
+      compareWithBase?: boolean
+      repeat?: number
+      regression?: {
+        /**
+         * @minItems 1
+         */
+        files: [string, ...string[]]
+      }
+    }
+  }
+  roles: {
+    /**
+     * @minItems 1
+     */
+    [k: string]: [string, ...string[]]
+  }
+  defaults?: {
+    [k: string]: unknown
+  }
+  legacyArea?: string
+  actionDriverMcp?: {
+    command: string
+    /**
+     * @minItems 5
+     */
+    args: [string, string, string, string, string, ...string[]]
+  }
+}
+
 // --- provenance-result.schema.json ---
 /**
  * bug 修复后在 baseRef 上查出的引入提交
@@ -758,6 +848,13 @@ export interface RunnerTaskRequest {
   limits: {
     timeoutSeconds: number
   }
+  actionDriverMcp?: {
+    command: string
+    /**
+     * @minItems 5
+     */
+    args: [string, string, string, string, string, ...string[]]
+  }
 }
 
 // --- runtime-secrets.schema.json ---
@@ -840,5 +937,271 @@ export interface Finding {
     selector?: string
   }
   status?: 'new' | 'existing' | 'fixed' | 'ignored'
+}
+
+// --- workflow-agent-params.schema.json ---
+export interface WorkflowAgentParams {
+  promptRef: string
+  skillRefs?: string[]
+  schemaRef: string
+  adapter?: 'codex' | 'cursor'
+  model?: string
+  writes?: boolean
+  sessionPolicy?: 'new' | 'continue'
+  maxAttempts?: number
+  timeoutMs?: number
+  requireTaskList?: boolean
+  resolveConflicts?: boolean
+}
+
+// --- workflow-approval-params.schema.json ---
+export interface WorkflowApprovalParams {
+  role: string
+  subjectRef: string
+  options?: string[]
+  batch?: boolean
+}
+
+// --- workflow-approval.schema.json ---
+export interface WorkflowApproval {
+  projectId: string
+  runId: string
+  configHash: string
+  candidateSha: string
+  targetSha: string
+  scopeHash: string
+  evidenceHash: string
+  actor: string
+  decision: 'approve' | 'reject' | 'terminate'
+  digest: string
+  reason?: string
+  createdAt: string
+}
+
+// --- workflow-artifact.schema.json ---
+export interface WorkflowArtifact {
+  id: string
+  projectId: string
+  runId: string
+  taskId: string
+  candidateSha: string
+  name: string
+  sha256: string
+  bytes: number
+  mimeType: string
+  uri: string
+  source?: {
+    kind: 'running-instance'
+    version: string
+    candidateVerified: false
+    targetId?: string
+    capturedAt?: string
+  }
+  rootRunId?: string
+  attempt?: number
+}
+
+// --- workflow-command-params.schema.json ---
+export type WorkflowCommandParams = {
+  commandRef?: string
+  command?: string
+  cwd?: string
+  timeoutMs?: number
+  env?: {
+    [k: string]: string
+  }
+  artifacts?: string[]
+  /**
+   * @maxItems 100
+   */
+  argv?: (
+    | string
+    | {
+        ref: string
+      }
+  )[]
+  managedCli?: {
+    operation: 'install' | 'switch' | 'rollback'
+    versionRef: string
+    approvalRef: string
+    verificationRef?: string
+    expectedVersionRef?: string
+    smokeRef?: string
+  }
+} & {
+  [k: string]: unknown
+}
+
+// --- workflow-condition-params.schema.json ---
+export type WorkflowConditionParams = {
+  [k: string]: unknown
+} & {
+  valueRef: string
+  operator?: 'equals' | 'not-equals' | 'empty' | 'not-empty'
+  equals?: unknown
+}
+
+// --- workflow-execution.schema.json ---
+export interface WorkflowExecution {
+  projectId: string
+  runId: string
+  nodeId: string
+  attempt: number
+  taskId: string
+  instanceId: string
+  configHash: string
+  status:
+    | 'queued'
+    | 'running'
+    | 'waiting-approval'
+    | 'passed'
+    | 'failed'
+    | 'blocked'
+    | 'timed-out'
+    | 'canceled'
+    | 'exceeded'
+    | 'skipped'
+  workspaceId?: string
+  baseSha?: string
+  candidateSha?: string
+  sessionId?: string
+  resourceIds?: string[]
+  result?: {
+    [k: string]: unknown
+  }
+  error?: string
+}
+
+// --- workflow-finish-params.schema.json ---
+export interface WorkflowFinishParams {
+  outcome: 'completed' | 'failed' | 'canceled'
+}
+
+// --- workflow-integrate-params.schema.json ---
+export type WorkflowIntegrateParams = {
+  [k: string]: unknown
+} & {
+  operation: 'merge' | 'revert'
+  approvalRef: string
+  verificationRef: string
+  target?: 'base' | 'integration'
+  revertRef?: string
+}
+
+// --- workflow-node-result.schema.json ---
+export interface WorkflowNodeResult {
+  status:
+    | 'queued'
+    | 'running'
+    | 'waiting-approval'
+    | 'passed'
+    | 'failed'
+    | 'blocked'
+    | 'timed-out'
+    | 'canceled'
+    | 'exceeded'
+    | 'skipped'
+  result?: {
+    [k: string]: unknown
+  }
+  error?: string
+  retryable?: boolean
+  resourceIds?: string[]
+}
+
+// --- workflow-notify-params.schema.json ---
+export interface WorkflowNotifyParams {
+  channel?: string
+  templateRef?: string
+  required?: boolean
+}
+
+// --- workflow-resource.schema.json ---
+export interface WorkflowResource {
+  id: string
+  runId: string
+  workspaceId: string
+  kind: 'service' | 'worktree' | 'temporary'
+  owned: boolean
+  pid?: number
+  url?: string
+  status: 'starting' | 'ready' | 'exited' | 'stopped' | 'cleanup-failed' | 'released'
+  candidateSha?: string
+}
+
+// --- workflow-service-params.schema.json ---
+export interface WorkflowServiceParams {
+  serviceRef: string
+  operation: 'start' | 'status' | 'stop'
+}
+
+// --- workflow-start-params.schema.json ---
+export interface WorkflowStartParams {
+  flowRef?: string
+}
+
+// --- workflow-subflow-params.schema.json ---
+export interface WorkflowSubflowParams {
+  flowRef: string
+  itemsRef?: string
+  concurrency?: number
+  join?: 'all' | 'any'
+  allowEmpty?: boolean
+  target?: 'base' | 'integration'
+  input?: {
+    [k: string]: unknown
+  }
+}
+
+// --- workflow-verify-params.schema.json ---
+export type WorkflowVerifyParams = {
+  [k: string]: unknown
+} & {
+  suites?: string[]
+  requiredEvidence?: string[]
+  coverageRef?: string
+  compareWithBase?: boolean
+  repeat?: number
+  browser?: {
+    /**
+     * @minItems 1
+     * @maxItems 50
+     */
+    paths: [string, ...string[]]
+  }
+  evidenceRef?: string
+  mode?: 'gate' | 'measure'
+  managedCli?: {
+    operation: 'smoke' | 'verify-current'
+    versionRef: string
+  }
+  configuration?: {
+    sampleSuite: string
+  }
+  /**
+   * @maxItems 64
+   */
+  resolves?: string[]
+}
+
+// --- workflow-work-item-params.schema.json ---
+export interface WorkflowWorkItemParams {
+  operation?: 'create' | 'update' | 'link'
+  templateRef?: string
+  itemsRef?: string
+  relation?: string
+  dedupeBy?: string[]
+}
+
+// --- workflow-workspace-params.schema.json ---
+export type WorkflowWorkspaceParams = {
+  [k: string]: unknown
+} & {
+  repoRef?: 'project' | 'project-config'
+  baseRef?: string
+  target?: 'base' | 'integration'
+  operation?: 'prepare' | 'revert' | 'assemble'
+  revertRef?: string
+  childrenRef?: string
 }
 
